@@ -1,0 +1,80 @@
+/* =====================================================================
+   Om os, the shape of the text (2026-09-16). Additive: loaded after v12.css by om-1.html to om-3.html only.
+   Patrick: the box is too narrow and the weight sits wrong; two or three lines per paragraph. The words are the
+   settled copy, untouched; only the hand breaks (<br>) go, so the measure decides the lines. Three shapes:
+   1 · Split: headline left, the two paragraphs right in one wide column, read left to right like the rest of the page.
+   2 · Centred and balanced: as now, but a wider block at a larger size, every paragraph's lines cut to equal length.
+   3 · Statement: headline and text left, text at statement size across the full measure, like the process beats.
+   ===================================================================== */
+.lab { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 400; display: flex; align-items: center; gap: 4px; padding: 6px 8px 6px 14px; border-radius: 999px; background: rgba(7, 14, 24, 0.86); border: 1px solid rgba(226, 232, 240, 0.16); color: #bcc7d6; font-size: 12px; letter-spacing: 0.02em; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8); }
+.lab span { margin-right: 8px; color: #7c8ba1; white-space: nowrap; }
+.lab b { color: #f2efe8; font-weight: 500; }
+.lab a { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; color: #f2efe8; text-decoration: none; }
+.lab a:hover { background: rgba(255, 255, 255, 0.08); }
+.lab a[aria-current] { background: var(--accent); color: #fff; }
+
+/* the three shapes share: no hand breaks, natural wrapping, no widow on the last line */
+.om--1 .om__text p br, .om--2 .om__text p br, .om--3 .om__text p br { display: none; }
+.om--1 .om__text p, .om--2 .om__text p, .om--3 .om__text p { text-wrap: pretty; }
+
+/* 1 · Split. The page's own 12-column grid (the intro used it): headline on columns 1 to 4 (two lines), text on 5 to 12.
+   Left-aligned, so a short last line is a natural tail, not a lopsided centre. About 72 characters a line, 775px at 1470. */
+.om--1 { text-align: left; }
+.om--1 .om__wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 0.5rem + 1.5vw, 2rem); justify-items: stretch; align-items: start; }
+.om--1 h2 { grid-column: 1 / span 4; max-width: 10ch; }
+.om--1 .om__text { grid-column: 5 / -1; margin-top: 0.35em; gap: 1.5rem; }
+.om--1 .om__text p { font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); line-height: 1.5; max-width: none; }
+
+/* 2 · Centred and balanced. The block grows from 674px to 900px and the type from 22px to 24px, and every
+   paragraph's lines are cut to equal length (text-wrap: balance), so no line is a stub under two full ones. */
+.om--2 .om__text { max-width: 900px; margin-top: 2.75rem; gap: 1.75rem; }
+.om--2 .om__text p { font-size: clamp(1.1875rem, 1.05rem + 0.6vw, 1.5rem); line-height: 1.48; text-wrap: balance; }
+
+/* 3 · Statement. Headline and text on the left edge, the text at the size of the process beats (30px at 1470),
+   medium weight, across the whole measure. The section carries weight instead of sitting quietly in the middle. */
+.om--3 { text-align: left; }
+.om--3 .om__wrap { justify-items: start; }
+.om--3 h2 { max-width: none; }
+.om--3 .om__text { margin-top: clamp(2rem, 1.25rem + 2vw, 3.25rem); gap: clamp(1.5rem, 1rem + 1.25vw, 2.25rem); max-width: 1010px; }
+.om--3 .om__text p { font-size: clamp(1.375rem, 0.9rem + 1.15vw, 1.9rem); font-weight: 450; line-height: 1.32; letter-spacing: -0.012em; }
+
+@media (max-width: 1100px) {
+  .om--1 .om__wrap { grid-template-columns: 1fr; }
+  .om--1 h2, .om--1 .om__text { grid-column: 1 / -1; }
+  .om--1 .om__text { margin-top: 2rem; }
+}
+
+/* ---------- round 2 (2026-09-16, Patrick): the section stays centred in the middle; 1 is out; he wants the
+   statement voice of 3, centred, and "a little more weight" than 2. Four centred shapes, 4 to 7. ---------- */
+.om--4 .om__text p br, .om--5 .om__text p br, .om--6 .om__text p br, .om--7 .om__text p br { display: none; }
+
+/* 4 · Statement, centred. 3's voice (30px, medium-light, tight leading) on a 1010px block in the middle,
+   every paragraph's lines cut to equal length. */
+.om--4 .om__text { max-width: 1010px; margin-top: clamp(2rem, 1.25rem + 2vw, 3.25rem); gap: clamp(1.5rem, 1rem + 1.25vw, 2.25rem); }
+.om--4 .om__text p { font-size: clamp(1.375rem, 0.9rem + 1.15vw, 1.9rem); font-weight: 450; line-height: 1.32; letter-spacing: -0.012em; text-wrap: balance; }
+
+/* 5 · Statement, centred block, lines set left. The same block and size as 4, but the lines start on one
+   left edge inside the centred block, so the eye has a margin to return to; the headline stays centred. */
+.om--5 .om__text { max-width: 1010px; margin-top: clamp(2rem, 1.25rem + 2vw, 3.25rem); gap: clamp(1.5rem, 1rem + 1.25vw, 2.25rem); text-align: left; }
+.om--5 .om__text p { font-size: clamp(1.375rem, 0.9rem + 1.15vw, 1.9rem); font-weight: 450; line-height: 1.32; letter-spacing: -0.012em; text-wrap: pretty; }
+
+/* 6 · Heavier, closer to now. 26px on a 920px block, medium weight (500), tighter leading (1.4): the weight
+   comes from the ink, not the size. Lines balanced. */
+.om--6 .om__text { max-width: 920px; margin-top: 2.75rem; gap: 1.75rem; }
+.om--6 .om__text p { font-size: clamp(1.25rem, 1rem + 0.7vw, 1.625rem); font-weight: 500; line-height: 1.4; letter-spacing: -0.008em; text-wrap: balance; }
+
+/* 7 · The big statement. 34px on a 1120px block, the two paragraphs read as two claims under the headline. */
+.om--7 .om__text { max-width: 1120px; margin-top: clamp(2.25rem, 1.5rem + 2vw, 3.5rem); gap: clamp(1.75rem, 1.25rem + 1.5vw, 2.75rem); }
+.om--7 .om__text p { font-size: clamp(1.5rem, 0.95rem + 1.35vw, 2.125rem); font-weight: 450; line-height: 1.28; letter-spacing: -0.016em; text-wrap: balance; }
+
+@media (max-width: 760px) {
+  .om--4 .om__text p, .om--5 .om__text p, .om--6 .om__text p, .om--7 .om__text p { text-wrap: pretty; }
+  .om--5 .om__text { text-align: center; }
+}
+
+/* ---------- round 3 (2026-09-16): the wide two-line block is settled on the page. Question: centred, or set left
+   like the FAQ's headline under it. om-8 is the same block, everything on the left edge. ---------- */
+.om--8 { text-align: left; }
+.om--8 .om__wrap { justify-items: start; }
+.om--8 h2 { max-width: none; }
+.om--8 .om__text p { text-wrap: pretty; }

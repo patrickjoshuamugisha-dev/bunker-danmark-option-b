@@ -1,0 +1,667 @@
+/* =====================================================================
+   Bunker Danmark · V12
+   One stylesheet. Tokens first, then base, then the page top to bottom,
+   then motion, then breakpoints. Spec: docs/specs/2026-09-07-v12-design.md
+   ===================================================================== */
+
+/* ---------- fonts ---------- */
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/InstrumentSans-latin.woff2") format("woff2");
+  font-weight: 400 600; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/InstrumentSans-latin-ext.woff2") format("woff2");
+  font-weight: 400 600; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/InstrumentSerif-Italic-latin.woff2") format("woff2");
+  font-weight: 400; font-style: italic; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/InstrumentSerif-Italic-latin-ext.woff2") format("woff2");
+  font-weight: 400; font-style: italic; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+/* ---------- tokens ----------
+   Two grounds. Navy is the default; a paper sheet re-scopes the same names,
+   so every component reads its colour from the sheet it sits on. */
+:root {
+  --navy: #0b1421;
+  --navy-deep: #070e18;
+  --navy-2: #0d1726;
+  --mist: #e7ecf2;
+  --mist-2: #dde4ec;
+  --accent: #2a5fd1;          /* the one action colour: buttons only */
+  --accent-hover: #3a6fe0;
+  --accent-ink: #ffffff;
+  --hi: #9dbdf0;              /* the highlight: rules, hover ink, the rim light. On navy */
+  --hi-rgb: 157, 189, 240;
+
+  --ground: var(--navy);
+  --ground-deep: var(--navy-deep);
+  --ground-2: var(--navy-2);
+  --surface: #111c2b;
+  --surface-2: #172538;
+  --line: rgba(226, 232, 240, 0.10);
+  --line-strong: rgba(226, 232, 240, 0.2);
+  --ink: #f2efe8;
+  --ink-2: #bcc7d6;
+  --ink-3: #7c8ba1;
+  --read-off: rgba(242, 239, 232, 0.30);
+  --scrim: 11, 20, 33;
+  --field-bg: rgba(255, 255, 255, 0.04);
+  --field-bg-focus: rgba(255, 255, 255, 0.06);
+  --bar-bg: #ffffff;
+  --bar-ink: #0b1421;
+  --bar-placeholder: #6e7d93;
+  --sheet-shadow: 0 -30px 80px rgba(0, 0, 0, 0.45);
+  --lift-1: 0 1px 0 rgba(255,255,255,0.06) inset, 0 18px 40px -18px rgba(0,0,0,0.75);
+  --lift-2: 0 1px 0 rgba(255,255,255,0.08) inset, 0 34px 80px -28px rgba(0,0,0,0.85), 0 8px 20px -10px rgba(0,0,0,0.6);
+  --lift-3: 0 1px 0 rgba(255,255,255,0.1) inset, 0 60px 140px -40px rgba(0,0,0,0.9), 0 18px 40px -18px rgba(0,0,0,0.7);
+  --grain-opacity: 0.028; /* 2026-09-16: was 0.045, read as dirty on the hero (Patrick) */
+
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+
+  /* fluid type: hero 72, h2 52, h3 30, body 18 at 1470 */
+  --fs-hero: clamp(2.75rem, 1.2rem + 3.6vw, 4.75rem);
+  --fs-h2: clamp(2rem, 0.9rem + 2.6vw, 3.5rem);
+  --fs-h2-s: clamp(1.75rem, 0.9rem + 2vw, 2.75rem);
+  --fs-h3: clamp(1.375rem, 1rem + 0.9vw, 1.875rem);
+  --fs-lead: clamp(1.125rem, 1rem + 0.45vw, 1.5rem);
+  --fs-body: clamp(1.0625rem, 1rem + 0.15vw, 1.125rem);
+  --fs-step: clamp(1.375rem, 0.9rem + 1.15vw, 2.125rem);
+  --fs-small: 0.875rem;
+  --fs-label: 0.8125rem;
+
+  --track-display: -0.035em;
+  --track-h2: -0.03em;
+  --track-h3: -0.02em;
+
+  --pad: clamp(1.25rem, 0.5rem + 4.4vw, 4.5rem);
+  --max: 1320px;
+  --sbw: 0px;
+  --gut: max(var(--pad), calc((100vw - var(--sbw) - var(--max)) / 2 + var(--pad)));
+  --sp-section: clamp(6rem, 3.5rem + 6vw, 10rem);
+  --sp-block: clamp(3rem, 2rem + 3vw, 5rem);
+
+  --ease: cubic-bezier(0.33, 0.3, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-reveal: cubic-bezier(0.33, 1, 0.68, 1);
+  /* the scroll reveal: long and slow-tailed, so staggered siblings overlap instead of stepping */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-reveal: 1.6s;
+  --t-hero: 1.15s;
+  --t-hover: 0.5s;
+
+  --nav-h: 80px;
+  --radius: 4px;            /* every control: buttons, fields (Patrick's pick 2, 2026-09-13) */
+  --radius-lg: 12px;         /* every frame: the form, the pictures */
+}
+
+/* a light sheet: the same names, the light values. Cool, so it sits in the navy's family */
+.sheet--light {
+  --ground: var(--mist);
+  --ground-deep: var(--mist-2);
+  --ground-2: #e2e8ef;
+  --surface: #f7f9fb;
+  --surface-2: #eff3f7;
+  --line: rgba(11, 20, 33, 0.10);
+  --line-strong: rgba(11, 20, 33, 0.2);
+  --ink: #0b1421;
+  --ink-2: #2f3d54;
+  --ink-3: #6b7a92;
+  --read-off: rgba(11, 20, 33, 0.22);
+  --hi: #35598f;
+  --hi-rgb: 53, 89, 143;
+  --scrim: 231, 236, 242;
+  --field-bg: rgba(11, 20, 33, 0.03);
+  --field-bg-focus: rgba(11, 20, 33, 0.05);
+  --sheet-shadow: 0 -30px 80px rgba(11, 20, 33, 0.35);
+  --lift-1: 0 1px 0 rgba(255,255,255,0.7) inset, 0 18px 40px -18px rgba(11,20,33,0.3);
+  --lift-2: 0 1px 0 rgba(255,255,255,0.8) inset, 0 34px 80px -28px rgba(11,20,33,0.35), 0 8px 20px -10px rgba(11,20,33,0.2);
+  --lift-3: 0 1px 0 rgba(255,255,255,0.8) inset, 0 60px 140px -40px rgba(11,20,33,0.45), 0 18px 40px -18px rgba(11,20,33,0.25);
+  color: var(--ink);
+}
+
+/* ---------- base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--navy-deep);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+img { display: block; max-width: 100%; }
+figure { margin: 0; }
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+input { font: inherit; color: inherit; }
+::selection { background: rgba(var(--hi-rgb), 0.35); }
+
+.container { width: 100%; max-width: var(--max); margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: fixed; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; background: #f2efe8; color: #0b1421; border-radius: 8px; font-size: 14px; }
+.skip:focus { top: 16px; outline: none; }
+:focus-visible { outline: 2px solid var(--hi); outline-offset: 3px; border-radius: 4px; }
+
+.grain {
+  position: fixed; inset: 0; z-index: 60; pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+/* ---------- type ---------- */
+.hero__title { font-size: var(--fs-hero); font-weight: 500; line-height: 1.0; letter-spacing: var(--track-display); }
+h2, .section-title { font-size: var(--fs-h2); font-weight: 500; line-height: 1.06; letter-spacing: var(--track-h2); text-wrap: balance; }
+h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; letter-spacing: var(--track-h3); }
+.line { display: block; }
+.line > span { display: block; }
+
+/* ---------- buttons ----------
+   One flat button (premium pass, 2026-09-13): one colour, 8px corners, no glow, no gloss line,
+   no lift. Hover is one step lighter over the page's hover time. Pressed is one step darker. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: 48px; padding: 0 28px; border-radius: var(--radius);
+  background: var(--accent); color: var(--accent-ink);
+  font-size: 14px; font-weight: 600; letter-spacing: 0.02em; line-height: 1; white-space: nowrap;
+  transition: background var(--t-hover) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { background: var(--accent-hover); }
+.btn:active { background: #2453b8; transition-duration: 0.12s; }
+.btn--sm { height: 40px; padding: 0 20px; font-size: 13px; }
+.btn--lg { height: 60px; padding: 0 34px; font-size: 16px; }
+.btn--wide { width: 100%; height: 54px; font-size: 15px; }
+.btn[data-state="pending"] { opacity: 0.8; pointer-events: none; }
+.btn[data-state="done"] { background: #2f9e6f; pointer-events: none; }
+
+/* ---------- nav ---------- */
+/* the nav arrives last in the hero's sequence */
+.nav { opacity: 0; transition: opacity 1.1s var(--ease-reveal) 0.9s; }
+.hero.is-in ~ .nav, body.is-in .nav { opacity: 1; }
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  height: var(--nav-h);
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 0 max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad)));
+  color: #f2efe8;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.6s var(--ease), height 0.6s var(--ease);
+}
+.nav::before { content: ""; position: absolute; inset: 0; background: rgba(11, 20, 33, 0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transition: background 0.6s var(--ease), backdrop-filter 0.6s var(--ease); z-index: -1; }
+.nav.is-scrolled { height: 68px; border-color: rgba(242, 239, 232, 0.1); }
+.nav.is-scrolled::before { background: rgba(11, 20, 33, 0.78); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); }
+.nav__brand { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.nav__brand span { font-weight: 400; opacity: 0.8; }
+.nav__links { display: flex; gap: 32px; }
+.nav__links a, .nav__phone { font-size: 14px; font-weight: 500; opacity: 0.76; transition: opacity var(--t-hover) var(--ease); }
+.nav__links a:hover, .nav__phone:hover { opacity: 1; }
+/* the number reads as a phone at a glance: a drawn handset in front, the digits without extra spacing */
+.nav__phone { display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+.nav__phone svg { flex: none; width: 15px; height: 15px; }
+.nav__right { display: flex; justify-content: flex-end; align-items: center; gap: 24px; }
+.nav__menu { display: none; width: 44px; height: 44px; margin-right: -10px; position: relative; }
+.nav__menu span { position: absolute; left: 12px; right: 12px; height: 1.5px; background: currentColor; transition: transform 0.5s var(--ease), top 0.5s var(--ease); }
+.nav__menu span:first-child { top: 18px; }
+.nav__menu span:last-child { top: 25px; }
+.nav__menu[aria-expanded="true"] span:first-child { top: 21px; transform: rotate(45deg); }
+.nav__menu[aria-expanded="true"] span:last-child { top: 21px; transform: rotate(-45deg); }
+
+.menu { position: fixed; inset: 0; z-index: 35; background: var(--navy); color: #f2efe8; display: flex; flex-direction: column; justify-content: space-between; padding: calc(var(--nav-h) + 24px) var(--pad) 40px; opacity: 0; transition: opacity 0.5s var(--ease); }
+.menu.is-open { opacity: 1; }
+.menu[hidden] { display: none; }
+.menu__links { display: flex; flex-direction: column; gap: 6px; }
+.menu__links a { font-size: clamp(2rem, 8vw, 2.75rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.2; padding: 6px 0; border-bottom: 1px solid rgba(226, 232, 240, 0.1); }
+.menu__foot { display: flex; flex-direction: column; gap: 20px; }
+.menu__foot > a:first-child { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; color: #a7b4c6; font-variant-numeric: tabular-nums; }
+.menu__foot > a:first-child svg { flex: none; width: 17px; height: 17px; }
+
+/* ---------- sheets ----------
+   Every section is a sheet. It parks with its bottom on the viewport floor
+   (JS sets --stick to 100svh minus its own height) and the next sheet slides
+   up over it. The covered sheet dims through --cover, set by the scroll. */
+.sheet { position: relative; min-height: 100svh; background: var(--ground); isolation: isolate; }
+/* three photographs get covered: the hero, Rummet, the lawn lift. Their covers carry the shadow. Nothing else overlaps. */
+.sheet--pin { position: sticky; top: var(--stick, 0px); transform: translateY(calc(var(--cover, 0) * -4vh)) scale(calc(1 - var(--cover, 0) * 0.05)); transform-origin: 50% calc(100% - 50svh); clip-path: inset(0 round calc(var(--cover, 0) * 24px)); will-change: transform; }
+.hero.sheet--pin { transform: translateY(calc(var(--cover, 0) * -4vh)); clip-path: none; }
+.ground.sheet--pin { transform: none; clip-path: none; }
+.ground.sheet--pin::after { display: none; }
+.sheet--pin::after { content: ""; position: absolute; inset: 0; z-index: 50; pointer-events: none; background: #000; opacity: var(--cover, 0); }
+.sheet--over { box-shadow: var(--sheet-shadow); }
+.sheet--light::after { background: #0b1421; }
+
+/* ---------- hero ---------- */
+.hero { display: flex; align-items: center; overflow: hidden; color: #f2efe8; }
+.hero__media { position: absolute; inset: -10px; z-index: -2; }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; transform: scale(1.06); filter: saturate(0.9) contrast(1.02); will-change: transform; }
+.hero.is-in .hero__media img { animation: hero-settle 2.8s var(--ease) forwards; }
+@keyframes hero-settle { to { transform: scale(1); } }
+.hero__scrim { position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(11, 20, 33, 0.7) 0%, rgba(11, 20, 33, 0.2) 28%, rgba(11, 20, 33, 0) 48%),
+    linear-gradient(90deg, rgba(11, 20, 33, 0.82) 0%, rgba(11, 20, 33, 0.55) 34%, rgba(11, 20, 33, 0.08) 68%, rgba(11, 20, 33, 0) 100%),
+    linear-gradient(0deg, rgba(11, 20, 33, 0.92) 0%, rgba(11, 20, 33, 0.5) 30%, rgba(11, 20, 33, 0) 58%);
+}
+.hero__content { position: relative; padding-top: calc(var(--nav-h) + 6vh); padding-bottom: 10vh; }
+.hero__title { max-width: 12ch; margin-left: -0.08em; }
+.hero__title { opacity: 0; transform: translateY(24px); }
+.hero.is-in .hero__title { opacity: 1; transform: none; transition: opacity var(--t-hero) var(--ease-reveal), transform var(--t-hero) var(--ease-reveal); }
+.hero__sub { margin-top: 1.25rem; font-size: var(--fs-lead); color: rgba(242, 239, 232, 0.86); max-width: 34ch; line-height: 1.45; }
+.hero [data-in] { opacity: 0; transform: translateY(24px); }
+.hero.is-in [data-in] { opacity: 1; transform: none; transition: opacity var(--t-hero) var(--ease-reveal), transform var(--t-hero) var(--ease-reveal); }
+.hero.is-in [data-in="1"] { transition-delay: 0.25s; }
+.hero.is-in [data-in="2"] { transition-delay: 0.45s; }
+.hero.is-in [data-in="3"] { transition-delay: 0.65s; }
+
+/* the address field and its button are two controls, 10px apart, never one bar (premium pass, 2026-09-13):
+   a dark translucent field with a hairline, the same voice as the contact form's fields */
+.check { display: flex; align-items: stretch; gap: 10px; width: min(560px, 100%); margin-top: 1.75rem; }
+.check input { flex: 1; min-width: 0; height: 48px; padding: 0 18px; background: rgba(11, 20, 33, 0.55); border: 1px solid rgba(242, 239, 232, 0.3); border-radius: var(--radius); outline: none; font-size: 16px; color: #f2efe8; transition: border-color 0.4s var(--ease), background 0.4s var(--ease); }
+.check input::placeholder { color: rgba(242, 239, 232, 0.62); }
+.check input:hover { border-color: rgba(242, 239, 232, 0.5); }
+.check input:focus { border-color: rgba(242, 239, 232, 0.75); background: rgba(11, 20, 33, 0.7); }
+.check .btn { height: 48px; flex: none; }
+.hero__status { margin-top: 12px; font-size: 14px; color: rgba(242, 239, 232, 0.82); max-width: 560px; }
+.hero__status:empty { display: none; }
+.hero__status a { text-decoration: underline; text-underline-offset: 3px; }
+.hero__status[data-state="error"] { color: #ffb4a8; }
+.hero__facts { display: none; }
+.hero__facts--off { display: flex; flex-wrap: wrap; gap: 0 28px; margin-top: 1.75rem; font-size: var(--fs-small); color: rgba(242, 239, 232, 0.7); letter-spacing: 0.01em; }
+.hero__facts li { position: relative; }
+.hero__facts li + li::before { content: ""; position: absolute; left: -15px; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: currentColor; transform: translateY(-50%); opacity: 0.6; }
+
+/* ---------- bunkeren: what it is ----------
+   Headline left at hero size, three statements to the right of it at reading
+   size. The letters turn from grey to ink as each line crosses the reading
+   window, the same device as the process, so the page has one reading voice. */
+.intro { min-height: 0; padding: var(--sp-section) 0 calc(var(--sp-section) * 0.95); }
+.intro__wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(1rem, 0.5rem + 1.5vw, 2rem); }
+.intro h2 { grid-column: 1 / span 10; font-size: var(--fs-hero); max-width: 26ch; }
+.intro__text { grid-column: 4 / -1; margin-top: clamp(3.5rem, 2rem + 4vw, 6.5rem); display: grid; gap: clamp(2.25rem, 1.25rem + 2.5vw, 3.75rem); }
+.intro__text p { font-size: clamp(1.5rem, 0.9rem + 1.5vw, 2.5rem); font-weight: 500; line-height: 1.22; letter-spacing: -0.022em; color: var(--ink-3); max-width: 29ch; }
+
+/* the reading voice: grey letters turn to ink as they are read */
+.read .w { display: inline-block; white-space: nowrap; }
+.read .c { color: var(--read-off); transition: color 0.35s var(--ease); }
+.read .c.on { color: var(--ink); }
+
+/* ---------- sådan foregår det: the steps on paper ----------
+   Centered title. Left: four beats filling character by character past the
+   midline. Right: one pinned panel, the pictures stack up as the beats pass. */
+.steps { padding-top: calc(var(--nav-h) + var(--sp-section)); padding-bottom: var(--sp-block); }
+/* the chapter title: centred, full width, above both columns */
+.steps__head { text-align: center; padding-bottom: var(--sp-block); }
+.steps__head h2 { font-size: var(--fs-hero); line-height: 1.0; letter-spacing: var(--track-display); max-width: 22ch; margin: 0 auto; }
+.steps__grid { display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); align-items: start; }
+.steps__text { margin: 0; padding-left: var(--gut); padding-right: clamp(2rem, 1rem + 4vw, 6rem); }
+.steps__list { display: flex; flex-direction: column; gap: clamp(7rem, 3rem + 8vw, 11rem); padding-top: 20svh; padding-bottom: 42svh; }
+.step { position: relative; }
+/* 2026-09-16, Patrick: the beats read too small next to the pictures ("we almost don't realize it"). Text 22 to 26px,
+   titles 31 to 40px at 1470, the column filled to 34 characters. */
+.step p { font-size: clamp(1.25rem, 1rem + 0.75vw, 1.625rem); font-weight: 450; line-height: 1.42; letter-spacing: -0.008em; color: var(--ink-3); max-width: 34ch; }
+.step p strong { display: block; font-size: clamp(1.75rem, 1.05rem + 1.6vw, 2.5rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.028em; color: inherit; margin-bottom: 0.45em; }
+.steps__media { position: relative; min-height: 100%; }
+.steps__pin { position: sticky; top: 0; height: 100svh; display: flex; align-items: center; padding: calc(var(--nav-h) + 1rem) 0 1.5rem; }
+.steps__frame { position: relative; width: 100%; aspect-ratio: 3 / 2; max-height: 100%; overflow: hidden; border-radius: var(--radius-lg) 0 0 var(--radius-lg); background: var(--navy-deep); box-shadow: 0 40px 100px -40px rgba(11, 20, 33, 0.55); }
+/* 2026-09-14: a plain dissolve. The old slide-and-zoom read as a harsh cut once the four pictures differed (Patrick). */
+.steps__img { position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1); will-change: opacity; }
+.steps__img.is-on { opacity: 1; }
+/* 2026-09-16: the pictures hold still; the slow downward drift under the dissolve is gone (Patrick). */
+.steps__img img { width: 100%; height: 114%; margin-top: -7%; object-fit: cover; object-position: 50% 55%; filter: saturate(0.9) contrast(1.02); }
+
+/* ---------- rummet ---------- */
+.room { display: flex; align-items: center; padding: calc(var(--nav-h) + 2rem) 0 3rem; overflow: hidden; margin-bottom: 55svh; }
+/* 2026-09-14: 46/54, Patrick's pick (room-2.html): a square frame shows the tall room picture almost whole. Was 56/44. */
+.room__grid { width: 100%; display: grid; grid-template-columns: minmax(0, 46fr) minmax(0, 54fr); gap: clamp(2.5rem, 1rem + 4vw, 6rem); align-items: center; }
+/* the interior runs off the left edge of the screen, the mirror of the process frame on the right */
+.room__media { position: relative; height: min(74svh, 640px); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; overflow: hidden; box-shadow: var(--lift-3); }
+.room__media img { width: 100%; height: 112%; margin-top: -6%; object-fit: cover; object-position: 50% 55%; filter: saturate(0.88) contrast(1.02); will-change: transform; }
+.room__text { padding-right: var(--pad); }
+.room__text h2 { max-width: 12ch; }
+.room__copy { margin-top: 2rem; display: grid; gap: 1.25rem; max-width: 40ch; }
+.room__copy p { color: var(--ink); font-size: var(--fs-lead); line-height: 1.5; }
+/* 2026-09-16: the text here arrives earlier and a touch quicker (1.2s, siblings 0.12s apart), so it is in place
+   when the sheet pins. The rest of the page keeps the 1.6s reveal. */
+/* the room's text is moved by the scroll itself (js, "the room's text rides in"); no timed reveal here */
+.room [data-rise] { will-change: transform, opacity; }
+.room__list { margin-top: 2.25rem; display: flex; flex-wrap: wrap; gap: 10px; }
+.room__list li { padding: 10px 16px; border: 1px solid var(--line-strong); border-radius: 999px; font-size: var(--fs-small); color: var(--ink-2); }
+
+/* ---------- kontakt: the finale ----------
+   The doors photograph lies behind the whole sheet, dimmed, and lands as the
+   sheet climbs in. The promise sits left at full h2, the form right on a raised
+   surface. This is the one place the page asks. */
+/* 2026-09-16, second pass (Patrick: too tall, empty at the top): the sheet is one screen, no more. The promise and
+   the form sit centred between the bar and the footer's band, which is 176px (was 212). On a short screen the
+   sheet grows just enough for the form. */
+.kontakt { position: relative; display: flex; align-items: center; min-height: 100svh; padding: calc(var(--nav-h) + 1.5rem) 0 calc(1.5rem + var(--foot-h)); overflow: hidden; color: #f2efe8; }
+.kontakt__media { position: absolute; inset: 0; z-index: -2; }
+.kontakt__media img { width: 100%; height: 112%; margin-top: -6%; object-fit: cover; object-position: 50% 60%; filter: saturate(0.85) brightness(0.92) contrast(1.04); will-change: transform; }
+.kontakt__scrim { position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(0deg, rgba(3, 6, 10, 0.97) 0, rgba(5, 9, 15, 0.88) calc(var(--foot-h) * 0.6), rgba(9, 16, 28, 0) calc(var(--foot-h) + 240px)),
+    linear-gradient(90deg, rgba(9, 16, 28, 0.93) 0%, rgba(9, 16, 28, 0.6) 44%, rgba(9, 16, 28, 0.12) 100%),
+    linear-gradient(0deg, rgba(9, 16, 28, 0.72) 0%, rgba(9, 16, 28, 0) 42%),
+    linear-gradient(180deg, rgba(9, 16, 28, 0.5) 0%, rgba(9, 16, 28, 0) 26%); }
+.kontakt__grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(3rem, 2rem + 4vw, 6rem); align-items: center; }
+.kontakt__lead h2 { font-size: var(--fs-h2); max-width: none; }
+.kontakt__list { margin-top: 2.5rem; display: grid; gap: 1rem; max-width: 34ch; color: rgba(242, 239, 232, 0.8); font-size: var(--fs-body); }
+.kontakt__list li { position: relative; padding-left: 28px; }
+.kontakt__list li::before { content: ""; position: absolute; left: 0; top: 0.85em; width: 14px; height: 1px; background: rgba(242, 239, 232, 0.45); }
+
+/* the card is a solid raised panel over the photograph, one hairline, no glass (premium pass, 2026-09-13, his go) */
+.kontakt .form { background: #111c2b; border-color: rgba(226, 232, 240, 0.12); box-shadow: 0 52px 120px -44px rgba(0, 0, 0, 0.88), 0 14px 34px -18px rgba(0, 0, 0, 0.6); }
+/* the label of the field you are in lights up: the only movement inside the card */
+.field label { transition: color 0.35s var(--ease); }
+.kontakt .field:focus-within label { color: var(--hi); }
+.form { position: relative; padding: clamp(1.5rem, 1rem + 1.6vw, 2.75rem); background: rgba(17, 28, 43, 0.94); color: #f2efe8; border: 1px solid rgba(226, 232, 240, 0.1); border-radius: var(--radius-lg); display: grid; gap: 1.25rem; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 60px 140px -40px rgba(0, 0, 0, 0.9), 0 18px 40px -18px rgba(0, 0, 0, 0.7); --line: rgba(226, 232, 240, 0.12); --line-strong: rgba(226, 232, 240, 0.22); --ink: #f2efe8; --ink-2: #a7b4c6; --ink-3: #6e7d93; --field-bg: rgba(255, 255, 255, 0.05); --field-bg-focus: rgba(255, 255, 255, 0.08); --hi: #9dbdf0; --hi-rgb: 157, 189, 240; }
+.field { display: grid; gap: 0.5rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.field label { font-size: var(--fs-label); color: var(--ink-2); letter-spacing: 0.01em; }
+.field input { height: 56px; padding: 0 18px; background: var(--field-bg); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); outline: none; width: 100%; transition: border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+.field input::placeholder { color: var(--ink-3); }
+.field input:hover { border-color: var(--line-strong); }
+.field input:focus { border-color: var(--hi); background: var(--field-bg-focus); box-shadow: 0 0 0 3px rgba(var(--hi-rgb), 0.25); }
+.field input[aria-invalid="true"] { border-color: #e2604d; }
+.field input:read-only { color: var(--ink-2); }
+.form__note { font-size: var(--fs-small); color: var(--ink-3); margin-top: -0.25rem; }
+.form__status { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.5; margin-top: -0.25rem; }
+.form__status:empty { display: none; }
+.cf-send[data-state="error"] ~ .form__status { color: #e2604d; }
+/* the calm light on the form button: preset b in cta-glint-lab.html (Patrick, 2026-09-13).
+   The band is 26% of the button wide and skewed; js/site.js slides it across in 2.6s, waits 9s, and goes again.
+   --peak is how bright the middle of the band is (22%). Nothing moves without the script. */
+.cf-send { position: relative; overflow: hidden; --peak: 0.22; }
+.cf-send > span { position: relative; z-index: 2; }
+.cf-glint { position: absolute; z-index: 1; top: -60%; bottom: -60%; left: 0; width: 26%; pointer-events: none; opacity: 0;
+  transform: translateX(-140%) skewX(-20deg);
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,calc(var(--peak) * 0.14)) 26%,
+    rgba(255,255,255,calc(var(--peak) * 0.34)) 42%,
+    rgba(255,255,255,var(--peak)) 50%,
+    rgba(255,255,255,calc(var(--peak) * 0.34)) 58%,
+    rgba(255,255,255,calc(var(--peak) * 0.14)) 74%,
+    rgba(255,255,255,0) 100%); }
+.cf-send[data-state="done"] .cf-glint { display: none; }
+
+/* ---------- the room carries the three cards (2026-09-17, Patrick's pick: story option 1) ----------
+   The sheet is taller than the screen now: the room first, then the heading, the rule and the three
+   photographs on the same navy ground. It parks with its floor on the viewport floor (--stick) and the
+   lawn sheet slides over it as before. The dwell is shorter, the cards were just read on the way down. */
+.room--plus { display: block; padding-bottom: 0; margin-bottom: 35svh; }
+.room--plus .room__grid { min-height: calc(100svh - var(--nav-h) - 5rem); }
+.room__usps { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: var(--sp-section); padding-bottom: var(--sp-section); --ink-2: #b4c0d2; --line: rgba(226, 232, 240, 0.14); }
+.room__usps .section-title { font-size: var(--fs-h2-s); max-width: none; }
+/* 2026-09-17, Patrick: the headline sat too near the room and too far from the three; the rule is gone
+   (he does not like the divider line), and the three are cards (the contact form's own surface), not bare pictures. */
+.room__usps .fordele__grid { margin-top: clamp(2.5rem, 1.75rem + 1.6vw, 3.5rem); padding-top: 0; border-top: 0; gap: clamp(1.25rem, 0.75rem + 1.2vw, 2rem); }
+.room__usps .fordel { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-lg); background: #111c2b; border: 1px solid rgba(226, 232, 240, 0.1); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07) inset, 0 40px 90px -44px rgba(0, 0, 0, 0.85); transition: border-color 0.8s var(--ease), box-shadow 0.8s var(--ease); }
+.room__usps .fordel:hover { border-color: rgba(226, 232, 240, 0.22); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 48px 100px -44px rgba(0, 0, 0, 0.95); }
+.room__usps .fordel__media { border-radius: 0; }
+.room__usps .fordel__body { padding: clamp(1.5rem, 1.1rem + 1vw, 2.125rem) clamp(1.5rem, 1.1rem + 1vw, 2.125rem) clamp(1.75rem, 1.3rem + 1.1vw, 2.5rem); }
+.room__usps .fordel h3 { margin-top: 0; }
+.room__usps .fordel p { max-width: none; text-wrap: pretty; }
+/* Depth and the pointer (2026-09-17, Patrick: three cards on a blank page read one-dimensional; quieter than V11).
+   One idea, light: a pool of it lies on the ground behind the row, and a little of it follows the hand along
+   the card's rim and across its face (js, eased, never fast). The card rises 4px to meet it and its shadow
+   deepens. The photographs sit a little deep in their frames and drift slower than the page (js). */
+.room__usps { position: relative; isolation: isolate; }
+.room__usps::before { content: ""; position: absolute; z-index: -1; left: 50%; bottom: 8%; width: min(1500px, 120%); height: 72%; transform: translateX(-50%); pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 55%, rgba(var(--hi-rgb, 157, 189, 240), 0.085), rgba(var(--hi-rgb, 157, 189, 240), 0.03) 45%, rgba(157, 189, 240, 0) 72%); }
+.room__usps .fordel { position: relative; --mx: 50%; --my: 0%; --lit: 0; translate: 0 calc(var(--lit) * -4px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07) inset, 0 calc(40px + var(--lit) * 14px) calc(90px + var(--lit) * 24px) -44px rgba(0, 0, 0, calc(0.85 + var(--lit) * 0.1)); }
+.room__usps .fordel:hover { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07) inset, 0 calc(40px + var(--lit) * 14px) calc(90px + var(--lit) * 24px) -44px rgba(0, 0, 0, calc(0.85 + var(--lit) * 0.1)); }
+.room__usps .fordel::before { content: ""; position: absolute; inset: -1px; z-index: 3; border-radius: inherit; padding: 1px; pointer-events: none; opacity: var(--lit);
+  background: radial-gradient(260px 260px at var(--mx) var(--my), rgba(214, 228, 250, 0.85), rgba(157, 189, 240, 0.35) 40%, rgba(157, 189, 240, 0) 72%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; }
+.room__usps .fordel::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; opacity: var(--lit);
+  background: radial-gradient(420px 420px at var(--mx) var(--my), rgba(157, 189, 240, 0.07), rgba(157, 189, 240, 0) 70%); }
+.room__usps .fordel__media img { height: 114%; margin-top: -7%; transition: none; }
+.room__usps .fordel__media img { scale: calc(1 + var(--lit) * 0.03); }
+@media (prefers-reduced-motion: reduce) { .room__usps .fordel { translate: none; } .room__usps .fordel__media img { height: 100%; margin-top: 0; scale: none; } }
+
+
+/* ---------- fordele: three photographs on a rule ----------
+   No boxes (premium pass, 2026-09-13). The heading sits left, a hairline runs across, and the three
+   photographs stand on it with their text under them. Hover: the photograph alone drifts closer. */
+.fordele { padding: var(--sp-section) 0; --ground: #0f1b2d; --ink-2: #b4c0d2; --line: rgba(226, 232, 240, 0.14); }
+.fordele .container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.fordele .section-title { font-size: var(--fs-h2-s); max-width: none; }
+.fordele__grid { width: 100%; text-align: left; }
+.fordele__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.5rem, 1rem + 1.5vw, 2.5rem); margin-top: var(--sp-block); padding-top: clamp(1.5rem, 1rem + 1.2vw, 2.25rem); border-top: 1px solid var(--line); }
+.fordel { position: relative; }
+.fordel__media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius-lg); background: var(--ground-deep); }
+.fordel__media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.92) contrast(1.02) brightness(1.06); transition: transform 1.2s var(--ease); }
+.fordel:hover .fordel__media img { transform: scale(1.04); }
+.fordel h3 { margin-top: 1.25rem; font-size: clamp(1.25rem, 1rem + 0.6vw, 1.625rem); }
+.fordel p { margin-top: 0.6rem; color: var(--ink-2); max-width: 34ch; font-size: var(--fs-body); }
+
+/* ---------- over og under ---------- */
+.ground__track { position: relative; height: 200svh; }
+.ground__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; background: var(--ground-deep); transform: translateY(calc(var(--cover, 0) * -4vh)) scale(calc(1 - var(--cover, 0) * 0.05)); clip-path: inset(0 round calc(var(--cover, 0) * 24px)); will-change: transform; }
+.ground__stage::after { content: ""; position: absolute; inset: 0; z-index: 50; pointer-events: none; background: #000; opacity: var(--cover, 0); }
+.ground__below, .ground__above { position: absolute; inset: 0; }
+.ground__below img, .ground__above img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; filter: saturate(0.88) contrast(1.02); }
+.ground__below img { transform: scale(calc(1.12 - var(--open, 0) * 0.0012)); will-change: transform; }
+.ground__above { clip-path: inset(0 0 calc(var(--open, 0) * 1%) 0); will-change: clip-path; }
+.ground__above img { height: 116%; transform: translateY(calc(var(--open, 0) * -0.14%)); will-change: transform; }
+/* 2026-09-14, idea 1: the top picture is a whole property (lawn, drive, carport in its lower part). The picture is the
+   stage's own size and grows a little from its bottom edge, so the lawn stays in view; phones get a tall version
+   through the <picture> source, since a narrow slice of the wide one shows only the roof. */
+.ground--home .ground__above picture { display: contents; }
+.ground--home .ground__above img { height: 100%; object-position: 50% 100%; transform: scale(calc(1.03 + var(--open, 0) * 0.0005)); transform-origin: 50% 100%; }
+.ground__edge { position: absolute; left: 0; right: 0; bottom: calc(var(--open, 0) * 1%); height: 1px; background: rgba(242, 239, 232, 0.55); box-shadow: 0 0 24px rgba(242, 239, 232, 0.35); z-index: 2; }
+.ground__scrim { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(0deg, rgba(11, 20, 33, 0.88) 0%, rgba(11, 20, 33, 0.5) 26%, rgba(11, 20, 33, 0) 48%); }
+/* the copy here is a caption for the photograph, so it runs as one wide line-pair */
+.ground__copy { position: absolute; left: 0; right: 0; bottom: clamp(3rem, 1.5rem + 3.5vw, 5.5rem); z-index: 4; color: #f2efe8; }
+.ground__copy h2 { max-width: 26ch; }
+.ground__copy p { max-width: 44ch; font-size: var(--fs-lead); line-height: 1.5; color: rgba(242, 239, 232, 0.88); }
+
+/* ---------- om ---------- */
+/* a plain statement: headline centred, two equal paragraphs under it, no picture */
+/* Om os is a short band between the dark Fordele and the open FAQ. On the same flat light
+   ground it read as a gap rather than a section, so it takes the deeper tone, gains height
+   and closes with a hairline. The FAQ keeps the lighter ground and opens up after it. */
+/* 2026-09-16, Patrick's pick 2 of 2: everything on the left edge, lined up with the FAQ's headline under it. Was centred. */
+.om { min-height: 0; display: flex; align-items: center; padding: clamp(7rem, 4.5rem + 5.5vw, 10rem) 0 clamp(6rem, 4rem + 4vw, 8.5rem); text-align: left; background: var(--ground-deep); border-bottom: 1px solid var(--line); }
+.om__wrap { display: grid; justify-items: start; }
+.om h2 { max-width: none; }
+/* the two paragraphs are broken by hand into three lines each on wide screens: two full lines and a shorter last (Patrick, 2026-09-13: it must look
+   deliberate, not like the box decided). On a phone the breaks are ignored and the text wraps as text. */
+/* 2026-09-16, Patrick: the box was too narrow (674px) and the three short centred lines read weak and clunky.
+   The block now runs the full page width (1180px at 1470), so each paragraph is two long, near-equal lines
+   (text-wrap: balance), at 23px and a medium-light weight. On narrower screens it becomes three lines; on a
+   phone it wraps as text. One hand break stays: the first paragraph turns at its full stop, so the line
+   never ends on "borgere i". Below 1100px the break is ignored. */
+.om__text { display: grid; gap: 1.5rem; margin-top: 2.5rem; width: 100%; max-width: 1180px; }
+.om__text p { color: var(--ink); font-size: clamp(1.125rem, 0.95rem + 0.6vw, 1.4375rem); font-weight: 450; line-height: 1.45; letter-spacing: -0.006em; text-wrap: pretty; }
+
+/* ---------- faq: V11's two columns ---------- */
+.faq { display: flex; align-items: start; padding: clamp(5rem, 3rem + 3.5vw, 7rem) 0 clamp(4rem, 2.5rem + 3vw, 6.5rem); margin-bottom: 40svh; }
+.faq__wrap { width: 100%; }
+.faq__wrap { display: grid; grid-template-columns: minmax(min-content, 4.6fr) minmax(0, 7fr); gap: clamp(2.5rem, 1rem + 7vw, 9rem); align-items: start; }
+/* the heading sits a touch lower than the first question, so the two columns settle against
+   each other instead of starting on the same line */
+.faq__richtext { padding-top: 1.1rem; }
+/* the heading stays on one line; the left column's minimum is its width, so the grid grows
+   the column to fit instead of breaking the title in two */
+.faq h2 { font-size: var(--fs-h2-s); white-space: nowrap; }
+.faq__intro { margin-top: 1.25rem; color: var(--ink); max-width: 36ch; font-size: var(--fs-lead); line-height: 1.5; }
+.faq__more { margin-top: 1rem; color: var(--ink-2); max-width: 36ch; }
+.faq__more a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(42, 95, 209, 0.4); text-underline-offset: 4px; transition: text-decoration-color 0.4s var(--ease), color 0.4s var(--ease); }
+.faq.sheet--dark .faq__more a { color: var(--hi); text-decoration-color: rgba(var(--hi-rgb), 0.45); }
+.faq__more a:hover { color: var(--accent-hover); text-decoration-color: currentColor; }
+.faq.sheet--dark .faq__more a:hover { color: #c3d8fa; text-decoration-color: currentColor; }
+.faq__accordion { border-top: 1px solid var(--line); }
+.acc { border-bottom: 1px solid var(--line); }
+.acc__summary { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 1.5rem 0; list-style: none; cursor: pointer; font-size: var(--fs-lead); font-weight: 500; letter-spacing: -0.01em; color: var(--ink); transition: color 0.3s var(--ease); }
+.acc__summary::-webkit-details-marker { display: none; }
+.acc__summary:hover { color: var(--hi); }
+.acc__icon { flex: none; color: var(--ink-2); transition: transform 0.4s var(--ease), color 0.3s var(--ease); }
+.acc__summary:hover .acc__icon { color: var(--hi); }
+.acc.is-open .acc__icon { transform: rotate(45deg); }
+.acc__content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s var(--ease); }
+.acc__inner { overflow: hidden; min-height: 0; opacity: 0; transform: translateY(-8px); transition: opacity 0.4s var(--ease), transform 0.5s var(--ease); }
+.acc__inner p { padding-bottom: 1.75rem; color: var(--ink); max-width: 60ch; }
+.acc.is-open .acc__content { grid-template-rows: 1fr; }
+.acc.is-open .acc__inner { opacity: 1; transform: none; }
+
+/* ---------- footer ----------
+   No ground of its own. It sits over the last stretch of the contact photograph,
+   which fades to black behind it (see .kontakt). Two blocks, bottom-anchored:
+   the wordmark with one thin legal line under it in the bottom-left corner, the two ways to
+   reach the company in the bottom-right. Both sides are two rows on one 28px pitch, so the
+   rows on the left and right sit on the same baselines. */
+:root { --foot-h: 176px; } /* 2026-09-16: was 212 */
+.footer { position: relative; z-index: 2; margin-top: calc(-1 * var(--foot-h)); min-height: var(--foot-h);
+  display: flex; align-items: flex-end; padding: 0 0 3.5rem; color: var(--ink-2);
+  /* if the footer ever grows past the space reserved for it, the overflow lands on black, not on nothing */
+  background: linear-gradient(180deg, transparent 0, transparent var(--foot-h), #03060a var(--foot-h)); }
+/* last baseline: the contact line sits on the copyright line's baseline, whatever the wordmark above does */
+.footer__inner { display: flex; align-items: flex-end; align-items: last baseline; justify-content: space-between; gap: 2rem 3rem; }
+.footer__brand, .footer__contact { display: flex; flex-direction: column; }
+/* email and phone on one line, on the copyright line, the same 20px apart (Patrick's pick 3, 2026-09-13):
+   the wordmark stands alone above, so nothing on the right tries to line up with a logo */
+.footer__contact { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; column-gap: 1.25rem; text-align: right; font-style: normal; }
+.footer__brand { align-items: flex-start; }
+/* the wordmark reads as a heading and the two lines under it as its subheading */
+/* one 28px pitch on both sides. Three stacked lines of near-equal width read as a slab;
+   a name over one long thin line reads as a signature */
+.footer__wordmark { font-size: 1.5rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 3px; }
+.footer__legal { display: flex; flex-wrap: wrap; column-gap: 1.25rem; margin: 0; }
+.footer__wordmark span { font-weight: 400; opacity: 0.8; }
+/* every small line the same 15px, one clear step under the wordmark, all on one 28px line pitch */
+.footer__line { position: relative; display: block; line-height: 1.75rem; }
+.footer__brand .footer__line { font-size: 0.9375rem; }
+.footer__contact .footer__line { font-size: 0.9375rem; }
+/* the site's own link voice, taken from the nav: cream ink held back with opacity, which
+   rises to full over the page's hover time and easing. No colour swaps, no underline popping in. */
+.footer__line { color: var(--ink); }
+.footer__brand .footer__line { opacity: 0.56; }
+.footer__contact .footer__line { opacity: 0.76; }
+.footer__tel { font-variant-numeric: tabular-nums; }
+.footer__policy { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.footer a.footer__line { transition: opacity var(--t-hover) var(--ease); }
+.footer a.footer__line:hover { opacity: 1; }
+.footer a:focus-visible { outline: 2px solid var(--hi); outline-offset: 3px; border-radius: 3px; opacity: 1; }
+/* the lines stay tight to look at and still give a thumb a full-size target */
+.footer__line::after { content: ""; position: absolute; inset: -8px -8px; }
+
+/* ---------- motion: reveals ---------- */
+/* one reveal: fade in and rise 24px, gently. --d is set per role by the script: headline first,
+   then the text, then the picture, then the small things and the button, 0.25s apart. */
+[data-reveal], [data-lines] { opacity: 0; transform: translateY(12px); transition: opacity var(--t-reveal) var(--ease-soft), transform var(--t-reveal) var(--ease-soft); transition-delay: var(--d, 0s); }
+[data-reveal].is-in, [data-lines].is-in { opacity: 1; transform: none; }
+/* a layer that drifts with depth cannot also rise (the drift owns its transform): it fades in */
+[data-reveal][data-depth], [data-lines][data-depth] { transform: none; transition: opacity var(--t-reveal) var(--ease-soft); transition-delay: var(--d, 0s); }
+
+/* ---------- breakpoints ---------- */
+/* under 1200px the five words and the number run short of air: the number goes first, the button stays */
+@media (max-width: 1200px) { .nav__phone { display: none; } }
+@media (max-width: 1100px) {
+  .nav__links { display: none; }
+  .nav { grid-template-columns: 1fr auto; }
+  .nav__phone { display: none; }
+  .nav__menu { display: block; }
+  .intro h2, .intro__text { grid-column: 1 / -1; }
+  .intro__text { margin-top: 2.5rem; }
+  .intro__text p { max-width: 34ch; }
+  .steps__grid { grid-template-columns: 1fr; gap: 0; }
+  .steps__media { order: -1; position: sticky; top: var(--nav-h); z-index: 2; min-height: 0; }
+  .steps__pin { position: relative; top: auto; height: 44svh; padding: 0; }
+  .steps__frame { aspect-ratio: auto; height: 100%; border-radius: 0; }
+  .steps__text { padding-left: var(--pad); padding-right: var(--pad); }
+  .steps__list { padding-top: 3rem; }
+  .fordele .section-title, .room__usps .section-title { max-width: 20ch; }
+  .steps__list { padding-top: 3rem; padding-bottom: 30svh; gap: clamp(5rem, 3rem + 8vw, 9rem); }
+  .step p { max-width: 26ch; }
+  .room__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .room__media { height: 52svh; border-radius: 0; }
+  .room__text { padding: 0 var(--pad); }
+  .kontakt__grid { grid-template-columns: 1fr; gap: 3rem; }
+  .kontakt__lead h2 { max-width: 20ch; }
+  .faq__wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+  .faq h2 { white-space: normal; }
+  .faq__richtext { padding-top: 0; }
+  .faq__richtext { position: static; }
+  .om__text p br { display: none; }
+}
+@media (max-width: 760px) {
+  :root { --nav-h: 68px; }
+  .nav .btn--sm { display: none; }
+  .nav__right { gap: 12px; }
+  .hero { align-items: flex-end; }
+  .hero__content { padding-top: calc(var(--nav-h) + 24px); padding-bottom: 2.5rem; }
+  .hero__media img { object-position: 62% 46%; }
+  .hero__scrim { background: linear-gradient(180deg, rgba(11, 20, 33, 0.7) 0%, rgba(11, 20, 33, 0.15) 30%, rgba(11, 20, 33, 0) 45%), linear-gradient(0deg, rgba(11, 20, 33, 0.95) 0%, rgba(11, 20, 33, 0.7) 40%, rgba(11, 20, 33, 0) 72%); }
+  .hero__title { max-width: none; }
+  .intro h2 { font-size: var(--fs-h2); max-width: 14ch; }
+  .steps__head h2 { font-size: var(--fs-h2); max-width: 14ch; }
+  .intro__text p { font-size: var(--fs-step); }
+  .check { flex-direction: column; gap: 10px; }
+  /* in a column the field must not flex, or its height collapses to the text */
+  .check input { flex: none; height: 48px; }
+  .check .btn { width: 100%; }
+  .hero__facts { flex-direction: column; gap: 6px; margin-top: 1.5rem; }
+  .hero__facts li + li::before { display: none; }
+  .steps__pin { height: 38svh; }
+  .room { padding-top: calc(var(--sp-section) * 0.8); }
+  .fordele__grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .ground__track { height: 160svh; }
+  .ground__copy p { max-width: none; }
+  .field-row { grid-template-columns: 1fr; }
+  .om__text p br { display: none; }
+  .om__text p { text-wrap: pretty; }
+  :root { --foot-h: 290px; }
+  /* on a phone the sheet is taller than the screen anyway, so the content starts under the bar as before */
+  .kontakt { padding: calc(var(--nav-h) + 2.5rem) 0 calc(3rem + var(--foot-h)); }
+  .footer { padding-bottom: 3rem; }
+  .footer__inner { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .footer__contact { justify-content: flex-start; text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+  [data-reveal], [data-lines], .hero [data-in], .hero__title { opacity: 1 !important; transform: none !important; }
+  .nav { opacity: 1 !important; }
+  .hero__media img { transform: none !important; }
+  .grain { display: none; }
+  .sheet--pin { position: relative; top: auto; transform: none; clip-path: none; }
+  .ground__stage { position: relative; height: auto; transform: none; clip-path: none; }
+  .sheet--pin::after { display: none; }
+  .sheet--over { box-shadow: none; }
+  .steps__list { padding-top: 0; padding-bottom: 0; gap: 4rem; }
+  .steps__pin { position: relative; top: auto; }
+  .steps__img { opacity: 1; transform: none !important; display: none; }
+  .steps__img:last-child { display: block; }
+  .read .c { color: var(--ink); }
+  .ground__track { height: auto; }
+  .ground__stage { position: relative; --open: 50; }
+}

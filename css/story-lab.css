@@ -1,0 +1,8 @@
+/* =====================================================================
+   Story lab (2026-09-17). Additive: loaded only by story-a.html and story-b.html.
+   A: the three USP pictures extend the room sheet. B: they stand on their own sheet after the lawn lift.
+   ===================================================================== */
+.room--plus { display: block; padding-bottom: 0; }
+.room--plus .room__grid { min-height: calc(100svh - var(--nav-h) - 5rem); }
+.room__usps { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: var(--sp-block); padding-bottom: var(--sp-section); --ink-2: #b4c0d2; --line: rgba(226, 232, 240, 0.14); }
+.room__usps .section-title { font-size: var(--fs-h2-s); max-width: none; }
