@@ -215,12 +215,12 @@ h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; letter-spacin
 .nav::before { content: ""; position: absolute; inset: 0; background: rgba(11, 20, 33, 0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transition: background 0.6s var(--ease), backdrop-filter 0.6s var(--ease); z-index: -1; }
 .nav.is-scrolled { height: 68px; border-color: rgba(242, 239, 232, 0.1); }
 .nav.is-scrolled::before { background: rgba(11, 20, 33, 0.78); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); }
-/* the logo: icon 34 and the name, laid out to whole pixels (logos/final4/approve.py, lockup.js).
-   Wide on one line above phone width, two lines on a phone. Colour follows the text colour. */
-.nav__brand { display: flex; align-items: center; }
-.logo { position: relative; display: block; flex: none; color: inherit; }
-.logo--stack { display: none; }
-@media (max-width: 760px) { .logo--wide { display: none; } .logo--stack { display: block; } }
+/* the name in the menu: the approved logo's lettering without the icon (2026-09-18, Patrick: the icon
+   drew too much attention there; it lives in the tab icon, loading screen and shared links instead).
+   Instrument Sans 500, letters -0.015em, a little extra word space. 16.667px gives 12px capitals. */
+.nav__brand { font-size: 17.5px; letter-spacing: -0.012em; white-space: nowrap; }
+.nav__brand .wm-k, .footer__wordmark .wm-k { font-weight: 620; }
+.nav__brand .wm-l, .footer__wordmark .wm-l { font-weight: 400; }
 .nav__links { display: flex; gap: 32px; }
 .nav__links a, .nav__phone { font-size: 14px; font-weight: 500; opacity: 0.76; transition: opacity var(--t-hover) var(--ease); }
 .nav__links a:hover, .nav__phone:hover { opacity: 1; }
@@ -562,7 +562,7 @@ h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; letter-spacin
 /* the wordmark reads as a heading and the two lines under it as its subheading */
 /* one 28px pitch on both sides. Three stacked lines of near-equal width read as a slab;
    a name over one long thin line reads as a signature */
-.footer__wordmark { display: block; color: var(--ink); margin-bottom: 12px; }
+.footer__wordmark { display: block; font-size: 25px; line-height: 1; letter-spacing: -0.012em; white-space: nowrap; color: var(--ink); margin-bottom: 12px; }
 .footer__legal { display: flex; flex-wrap: wrap; column-gap: 1.25rem; margin: 0; }
 /* every small line the same 15px, one clear step under the wordmark, all on one 28px line pitch */
 .footer__line { position: relative; display: block; line-height: 1.75rem; }
@@ -671,4 +671,25 @@ h3 { font-size: var(--fs-h3); font-weight: 500; line-height: 1.15; letter-spacin
   .read .c { color: var(--ink); }
   .ground__track { height: auto; }
   .ground__stage { position: relative; --open: 50; }
+}
+
+/* The menu bar, 2026-09-18 (Patrick: "too compact"). Taller bar, 15px words, 44px between them.
+   Only while the links show; the phone bar keeps 80px. */
+@media (min-width: 1101px) {
+  .nav { height: 88px; }
+  .nav.is-scrolled { height: 72px; }
+  .nav__links { gap: 48px; }
+  .nav__links a, .nav__phone { font-size: 16px; }
+  /* then "spread too far on both sides": the name, the links and the right side grow, so the holes shrink (247px to 217px) */
+  .nav__brand { font-size: 21px; }
+  .nav__right { gap: 12px; }
+  .nav .btn--sm { height: 44px; padding: 0 24px; font-size: 14px; }
+  /* Balance, 2026-09-18 (Patrick: "it looks like it is supposed to be in the middle but leans towards the right").
+     The right side was twice the name's width (268px against 133px): the phone number becomes a phone button,
+     like Option A's, and the links centre in the space between the name and the right side, not on the page. */
+  .nav { grid-template-columns: auto 1fr auto; }
+  .nav__links { justify-self: center; }
+  .nav__phone { width: 44px; height: 44px; justify-content: center; border: 1px solid rgba(242, 239, 232, 0.28); border-radius: 4px; }
+  .nav__phone span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .nav__phone svg { width: 16px; height: 16px; }
 }
